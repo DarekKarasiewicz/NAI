@@ -54,6 +54,35 @@ rule39 = ctrl.Rule(wind_speed['very_strong'] | board_length['big_foot'] | board_
 
 
 
+rule1 = ctrl.Rule(wind_speed['week'] | board_length['kid_size'] | board_width['kid_size'], kite_size['very_large'])
+rule2 = ctrl.Rule(wind_speed['week'] | board_length['kid_size'] | board_width['narrow'], kite_size['very_large'])
+rule3 = ctrl.Rule(wind_speed['week'] | board_length['short'] | board_width['narrow'], kite_size['very_large'])
+rule4 = ctrl.Rule(wind_speed['week'] | board_length['short'] | board_width['avarge'], kite_size['very_large'])
+rule5 = ctrl.Rule(wind_speed['week'] | board_length['avarge'] | board_width['avarge'], kite_size['very_large'])
+rule6 = ctrl.Rule(wind_speed['week'] | board_length['avarge'] | board_width['wide'], kite_size['very_large'])
+rule7 = ctrl.Rule(wind_speed['week'] | board_length['long'] | board_width['wide'], kite_size['very_large'])
+rule8 = ctrl.Rule(wind_speed['week'] | board_length['long'] | board_width['big_foot'], kite_size['large'])
+rule9 = ctrl.Rule(wind_speed['week'] | board_length['big_foot'] | board_width['big_foot'], kite_size['large'])
+rule20 = ctrl.Rule(wind_speed['strong'] | board_length['kid_size'] | board_width['kid_size'], kite_size['medium'])
+rule21 = ctrl.Rule(wind_speed['strong'] | board_length['kid_size'] | board_width['narrow'], kite_size['medium'])
+rule22 = ctrl.Rule(wind_speed['strong'] | board_length['short'] | board_width['narrow'], kite_size['medium'])
+rule23 = ctrl.Rule(wind_speed['strong'] | board_length['short'] | board_width['avarge'], kite_size['medium'])
+rule24 = ctrl.Rule(wind_speed['strong'] | board_length['avarge'] | board_width['avarge'], kite_size['medium'])
+rule25 = ctrl.Rule(wind_speed['strong'] | board_length['avarge'] | board_width['wide'], kite_size['medium'])
+rule26 = ctrl.Rule(wind_speed['strong'] | board_length['long'] | board_width['wide'], kite_size['small'])
+rule27 = ctrl.Rule(wind_speed['strong'] | board_length['long'] | board_width['big_foot'], kite_size['small'])
+rule28 = ctrl.Rule(wind_speed['strong'] | board_length['big_foot'] | board_width['big_foot'], kite_size['small'])
+rule29 = ctrl.Rule(wind_speed['strong'] | board_length['big_foot'] | board_width['big_foot'], kite_size['small'])
+rule40 = ctrl.Rule(wind_speed['armagedon'] | board_length['kid_size'] | board_width['kid_size'], kite_size['small'])
+rule41 = ctrl.Rule(wind_speed['armagedon'] | board_length['kid_size'] | board_width['narrow'], kite_size['small'])
+rule42 = ctrl.Rule(wind_speed['armagedon'] | board_length['short'] | board_width['narrow'], kite_size['small'])
+rule43 = ctrl.Rule(wind_speed['armagedon'] | board_length['short'] | board_width['avarge'], kite_size['very_small'])
+rule44 = ctrl.Rule(wind_speed['armagedon'] | board_length['avarge'] | board_width['avarge'], kite_size['very_small'])
+rule45 = ctrl.Rule(wind_speed['armagedon'] | board_length['avarge'] | board_width['wide'], kite_size['very_small'])
+rule46 = ctrl.Rule(wind_speed['armagedon'] | board_length['long'] | board_width['wide'], kite_size['very_small'])
+rule47 = ctrl.Rule(wind_speed['armagedon'] | board_length['long'] | board_width['big_foot'], kite_size['very_small'])
+rule48 = ctrl.Rule(wind_speed['armagedon'] | board_length['big_foot'] | board_width['big_foot'], kite_size['very_small'])
+rule49 = ctrl.Rule(wind_speed['armagedon'] | board_length['big_foot'] | board_width['big_foot'], kite_size['very_small'])
 
 
 """
