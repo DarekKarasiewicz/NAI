@@ -30,9 +30,29 @@ kite_size['large'] = fuzz.trimf(kite_size.universe, [12, 15, 18])
 kite_size['very_large'] = fuzz.trimf(kite_size.universe, [15, 18, 18])
 
 
-rule1 = ctrl.Rule(wind_speed[''] | board_length['poor'] | board_width['low'], kite_size[])
-rule2 = ctrl.Rule(service['average'], tip['medium'])
-rule3 = ctrl.Rule(service['good'] | quality['good'], tip['high'])
+rule10 = ctrl.Rule(wind_speed['avarge'] | board_length['kid_size'] | board_width['kid_size'], kite_size[""])
+rule11 = ctrl.Rule(wind_speed['avarge'] | board_length['kid_size'] | board_width['narrow'], kite_size[""])
+rule12 = ctrl.Rule(wind_speed['avarge'] | board_length['short'] | board_width['kid_size'], kite_size[""])
+rule13 = ctrl.Rule(wind_speed['avarge'] | board_length['short'] | board_width['narrow'], kite_size[""])
+rule14 = ctrl.Rule(wind_speed['avarge'] | board_length['short'] | board_width['avarge'], kite_size[""])
+rule15 = ctrl.Rule(wind_speed['avarge'] | board_length['avarge'] | board_width['narrow'], kite_size[""])
+rule16 = ctrl.Rule(wind_speed['avarge'] | board_length['avarge'] | board_width['avarge'], kite_size[""])
+rule17 = ctrl.Rule(wind_speed['avarge'] | board_length['avarge'] | board_width['wide'], kite_size[""])
+rule18 = ctrl.Rule(wind_speed['avarge'] | board_length['long'] | board_width['wide'], kite_size[""])
+rule19 = ctrl.Rule(wind_speed['avarge'] | board_length['big_foot'] | board_width['big_foot'], kite_size[""])
+rule30 = ctrl.Rule(wind_speed['very_strong'] | board_length['kid_size'] | board_width['kid_size'], kite_size[""])
+rule31 = ctrl.Rule(wind_speed['very_strong'] | board_length['kid_size'] | board_width['narrow'], kite_size[""])
+rule32 = ctrl.Rule(wind_speed['very_strong'] | board_length['short'] | board_width['kid_size'], kite_size[""])
+rule33 = ctrl.Rule(wind_speed['very_strong'] | board_length['short'] | board_width['narrow'], kite_size[""])
+rule34 = ctrl.Rule(wind_speed['very_strong'] | board_length['short'] | board_width['avarge'], kite_size[""])
+rule35 = ctrl.Rule(wind_speed['very_strong'] | board_length['avarge'] | board_width['narrow'], kite_size[""])
+rule36 = ctrl.Rule(wind_speed['very_strong'] | board_length['avarge'] | board_width['avarge'], kite_size[""])
+rule37 = ctrl.Rule(wind_speed['very_strong'] | board_length['avarge'] | board_width['wide'], kite_size[""])
+rule38 = ctrl.Rule(wind_speed['very_strong'] | board_length['long'] | board_width['wide'], kite_size[""])
+rule39 = ctrl.Rule(wind_speed['very_strong'] | board_length['big_foot'] | board_width['big_foot'], kite_size[""])
+
+
+
 
 
 
