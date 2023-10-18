@@ -4,6 +4,52 @@ import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 
 
+"""
+The Kite size Problem
+-------------------
+
+Control system which models how you might choose what size of kite you should
+take om sesion. When you chooseing you should consider wind speed, and size
+of your board hight and width. Base on taht fuzzy control system gives you 
+size you should consider to take (+2/-2 base on your weight).
+
+We would formulate this problem as:
+
+* Antecednets (Inputs)
+   - `Wind speed`
+      * Wind speed in knots  on a scale of 0 to 60?(Yes wind speed could be higher than 60 but then you should 
+      consider why you try kill yourself)
+      * Fuzzy set  week, avarge, strong, very_strong, armagedon
+   - `board hight`
+      * Board hight in cm on scale 132 to 166?
+      * Fuzzy set: kid_size, short, avarge, long, big_foot
+   - `board wight`
+      * Board wight in cm on scale 39 to 50?
+      * Fuzzy set: kid_size, short, avarge, long, big_foot
+      
+* Consequents (Outputs)
+   - `Kite size`
+      * What kite size you should take on sesion on scale 3m2 to 18m2 
+      * Fuzzy set: very_small, small, medium, large, very_large, extreme_large
+* Rules
+    We should take only few rules by example:
+   - IF the *wind* is week  *and* the *board_high* is big_foot *and* the *board_wight* is  big_foot,
+     THEN the kite_size will be very_large.
+   - IF the *wind* is strong  *and* the *board_high* is kid_size *and* the *board_wight* is  kid_size,
+     THEN the kite_size will be medium.
+   - IF the *wind* is very_strong  *and* the *board_high* is avarge *and* the *board_wight* is  wide,
+     THEN the kite_size will be very_small.
+   - IF the *wind* is avarge  *and* the *board_high* is short *and* the *board_wight* is  narrow,
+     THEN the kite_size will be large.
+     
+* Usage
+   - If I tell this controller that I rate:
+      * the wind_speed as 9 and
+      * the board_high as 136,
+      * the board_width as 45,
+   - it would recommend kite size:
+      * a 15m2
+"""
 
 # New Antecedent/Consequent objects hold universe variables and membership
 # functions
@@ -27,21 +73,22 @@ kite_size['very_small'] = fuzz.trimf(kite_size.universe, [3, 6, 9])
 kite_size['small'] = fuzz.trimf(kite_size.universe, [6, 9, 12])
 kite_size['medium'] = fuzz.trimf(kite_size.universe, [9, 12, 15])
 kite_size['large'] = fuzz.trimf(kite_size.universe, [12, 15, 18])
-kite_size['very_large'] = fuzz.trimf(kite_size.universe, [15, 18, 18])
+kite_size['very_large'] = fuzz.trimf(kite_size.universe, [15, 16, 18])
+kite_size['extrime_large'] = fuzz.trimf(kite_size.universe, [16, 17, 18])
 
 
-rule1 = ctrl.Rule(wind_speed['week'] & board_length['kid_size'] & board_width['kid_size'], kite_size['very_large'])
-rule2 = ctrl.Rule(wind_speed['week'] & board_length['kid_size'] & board_width['narrow'], kite_size['very_large'])
-rule3 = ctrl.Rule(wind_speed['week'] & board_length['short'] & board_width['narrow'], kite_size['very_large'])
-rule4 = ctrl.Rule(wind_speed['week'] & board_length['short'] & board_width['avarge'], kite_size['very_large'])
-rule5 = ctrl.Rule(wind_speed['week'] & board_length['avarge'] & board_width['avarge'], kite_size['very_large'])
-rule6 = ctrl.Rule(wind_speed['week'] & board_length['avarge'] & board_width['wide'], kite_size['very_large'])
-rule7 = ctrl.Rule(wind_speed['week'] & board_length['long'] & board_width['wide'], kite_size['very_large'])
+rule1 = ctrl.Rule(wind_speed['week'] & board_length['kid_size'] & board_width['kid_size'], kite_size['extrime_large'])
+rule2 = ctrl.Rule(wind_speed['week'] & board_length['kid_size'] & board_width['narrow'], kite_size['extrime_large'])
+rule3 = ctrl.Rule(wind_speed['week'] & board_length['short'] & board_width['narrow'], kite_size['extrime_large'])
+rule4 = ctrl.Rule(wind_speed['week'] & board_length['short'] & board_width['avarge'], kite_size['extrime_large'])
+rule5 = ctrl.Rule(wind_speed['week'] & board_length['avarge'] & board_width['avarge'], kite_size['extrime_large'])
+rule6 = ctrl.Rule(wind_speed['week'] & board_length['avarge'] & board_width['wide'], kite_size['extrime_large'])
+rule7 = ctrl.Rule(wind_speed['week'] & board_length['long'] & board_width['wide'], kite_size['extrime_large'])
 rule8 = ctrl.Rule(wind_speed['week'] & board_length['long'] & board_width['big_foot'], kite_size['very_large'])
 rule9 = ctrl.Rule(wind_speed['week'] & board_length['big_foot'] & board_width['big_foot'], kite_size['very_large'])
 rule10 = ctrl.Rule(wind_speed['avarge'] & board_length['kid_size'] & board_width['kid_size'], kite_size["very_large"])
-rule11 = ctrl.Rule(wind_speed['avarge'] & board_length['kid_size'] & board_width['narrow'], kite_size["very_large"])
-rule12 = ctrl.Rule(wind_speed['avarge'] & board_length['short'] & board_width['kid_size'], kite_size["very_large"])
+rule11 = ctrl.Rule(wind_speed['avarge'] & board_length['kid_size'] & board_width['narrow'], kite_size["large"])
+rule12 = ctrl.Rule(wind_speed['avarge'] & board_length['short'] & board_width['kid_size'], kite_size["large"])
 rule13 = ctrl.Rule(wind_speed['avarge'] & board_length['short'] & board_width['narrow'], kite_size["large"])
 rule14 = ctrl.Rule(wind_speed['avarge'] & board_length['short'] & board_width['avarge'], kite_size["large"])
 rule15 = ctrl.Rule(wind_speed['avarge'] & board_length['avarge'] & board_width['narrow'], kite_size["large"])
@@ -113,9 +160,9 @@ and the service 9.8 of 10.
 """
 # Pass inputs to the ControlSystem using Antecedent labels with Pythonic API
 # Note: if you like passing many inputs all at once, use .inputs(dict_of_data)
-sizing.input['wind_speed'] = 10
-sizing.input['board_length'] = 166
-sizing.input['board_weight'] = 50
+sizing.input['wind_speed'] = 9
+sizing.input['board_length'] = 136
+sizing.input['board_weight'] = 45
 
 # Crunch the numbers
 sizing.compute()
