@@ -1,15 +1,35 @@
+"""
+Movie recommendations algorithm
+
+Authors: Dariusz Karasiewicz, Mikołaj Kusiński
+"""
+
 import argparse
 import json
 import numpy as np
 from compute_scores import pearson_score
-# from collaborative_filtering import find_similar_users
 def build_arg_parser():
+    """
+    This function defines an argument parser which takes classifier type as an input parameter.
+
+    return:
+    ArgumentParser
+    """
     parser = argparse.ArgumentParser(description='Find recommendations for the given user')
     parser.add_argument('--user', dest='user', required=True, help='Input user')
     return parser
 
-# Get movie recommendations for the input user
 def get_recommendations(dataset, input_user):
+    """
+    This function get the movie recommendations for given user.
+
+    input:
+    Any dataset
+    Any input_user
+
+    return:
+    list movie_recommendations
+    """
     if input_user not in dataset:
         raise TypeError('Cannot find ' + input_user + ' in the dataset')
 
@@ -37,14 +57,11 @@ def get_recommendations(dataset, input_user):
     if len(overall_scores) == 0:
         return ['No recommendations possible']
 
-    # Generate movie ranks by normalization
     movie_scores = np.array([[score / similarity_scores[item], item]
                              for item, score in overall_scores.items()])
 
-    # Sort in decreasing order
     movie_scores = movie_scores[np.argsort(movie_scores[:, 0])[::-1]]
 
-    # Extract the movie recommendations
     movie_recommendations = [movie for _, movie in movie_scores]
     return movie_recommendations
 
@@ -57,8 +74,8 @@ if __name__=='__main__':
 
     print("\nMovie recommendations for " + user + ":")
     movies = get_recommendations(data, user)
-    # for i, movie in enumerate(movies):
-    #     print(str(i + 1) + '. ' + movie)
+    for i, movie in enumerate(movies):
+        print(str(i + 1) + '. ' + movie)
 
     for i, movie in enumerate(movies[:3]):
         print(str(i + 1) + '. ' + movie)
