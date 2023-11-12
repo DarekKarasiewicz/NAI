@@ -2,6 +2,13 @@
 Movie recommendations algorithm
 
 Authors: Dariusz Karasiewicz, Mikołaj Kusiński
+
+Problem: Build an engine for recommending and anti-recommending series and films for the user
+
+How to use: 
+In termianal use commend 
+    $ python main.py --user <user-name>
+
 """
 
 import argparse
@@ -74,12 +81,10 @@ if __name__=='__main__':
 
     print("\nMovie recommendations for " + user + ":")
     movies = get_recommendations(data, user)
-    for i, movie in enumerate(movies):
-        print(str(i + 1) + '. ' + movie)
 
-    for i, movie in enumerate(movies[:3]):
+    for i, movie in enumerate(movies[:5]):
         print(str(i + 1) + '. ' + movie)
     print("")
     print("Movie  antirecommendations" + user + ":")
-    for i, movie in enumerate(movies[-3:]):
+    for i, movie in enumerate(movies[-5:]):
         print(str(i + 1) + '. ' + movie)
