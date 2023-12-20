@@ -5,8 +5,21 @@ import math
 import pygame
 import os
 
+"""
+This program allows the user to control the music player using hand gestures.
+
+Authors: Dariusz Karasiewicz, Mikołaj Kusiński
+"""
+
 class MusicPlayer:
+
     def __init__(self):
+        """
+        Initializes a music player object using Pygame library.
+
+        This constructor initializes the Pygame library, sets up the music mixer,
+        loads the music playlist, and sets the initial state of the music player.
+        """
         pygame.init()
         pygame.mixer.init()
         self.playlist = self.load_music_playlist()
@@ -14,61 +27,77 @@ class MusicPlayer:
         self.playing = False
 
     def load_music_playlist(self):
+        """
+        Loads a music playlist from the specified folder.
+
+        This method scans the "music" folder for MP3 files and creates a playlist
+        containing the full paths to each music track.
+
+        Returns:
+        - playlist: A list of strings, each representing the full path to a music track.
+        """
         music_folder = "music"
         music_files = [file for file in os.listdir(music_folder) if file.endswith(".mp3")]
         return [os.path.join(music_folder, file) for file in music_files]
 
     def play(self):
+        """
+        Plays the current music track.
+
+        This method checks if the music mixer is not currently playing any music,
+        loads the next track from the playlist, plays it, and updates the player's state.
+        """
         if not pygame.mixer.music.get_busy():
             pygame.mixer.music.load(self.playlist[self.current_track_index])
             pygame.mixer.music.play()
             self.playing = True
 
     def stop(self):
+        """
+        Stops the currently playing music track.
+
+        This method stops the playback of the current music track and updates
+        the player's state to indicate that no music is currently playing.
+        """
         pygame.mixer.music.stop()
         self.playing = False
 
     def next_track(self):
+        """
+        Plays the next music track in the playlist.
+
+        This method stops the currently playing track, updates the index to the next track,
+        and then plays the newly selected track.
+        """
         self.stop()
         self.current_track_index = (self.current_track_index + 1) % len(self.playlist)
         self.play()
 
     def previous_track(self):
+        """
+        Plays the previous music track in the playlist.
+
+        This method stops the currently playing track, updates the index to the next track,
+        and then plays the newly selected track.
+        """
         self.stop()
         self.current_track_index = (self.current_track_index - 1) % len(self.playlist)
         self.play()
 
-# Inicjalizacja odtwarzacza
-
-# while True:
-#     print("1. Play/Pause")
-#     print("2. Stop")
-#     print("3. Next Track")
-#     print("4. Previous Track")
-#     print("5. Quit")
-
-#     choice = input("Wybierz opcję: ")
-
-#     if choice == "1":
-#         if player.playing:
-#             pygame.mixer.music.pause()
-#             player.playing = False
-#         else:
-#             pygame.mixer.music.unpause()
-#             player.playing = True
-#     elif choice == "2":
-#         player.stop()
-#     elif choice == "3":
-#         player.next_track()
-#     elif choice == "4":
-#         player.previous_track()
-#     elif choice == "5":
-#         player.stop()
-#         break
-#     else:
-#         print("Niepoprawny wybór. Wybierz liczbę od 1 do 5.")
-
 def finger_up(finger_bottom, finger_tip) -> bool:
+    """
+    Determines if a finger is in an 'up' position.
+
+    This function compares the positions of the bottom and tip of a finger and
+    returns True if the finger is in an upward position, and False otherwise.
+
+    Parameters:
+    - finger_bottom: The y-coordinate of the bottom of the finger.
+    - finger_tip: The y-coordinate of the tip of the finger.
+
+    Returns:
+    - bool: True if the finger is in an upward position, False otherwise.
+    """
     if finger_bottom > finger_tip:
         return True
     else:
@@ -96,10 +125,10 @@ while True:
 
     gesture_detected = False  # Flag to track if any gesture is detected
     if counter >= reset_interval:
-        last_move = None  # Reset last_move
-        counter = 0  # Reset the counter
+        last_move = None
+        counter = 0 
 
-    counter += 1  # Increment the counter
+    counter += 1 
     if results.multi_hand_landmarks:
         for handLms in results.multi_hand_landmarks:
             for id, lm in enumerate(handLms.landmark):
