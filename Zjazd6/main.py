@@ -68,6 +68,11 @@ class MusicPlayer:
 #     else:
 #         print("Niepoprawny wybór. Wybierz liczbę od 1 do 5.")
 
+def finger_up(finger_bottom, finger_tip) -> bool:
+    if finger_bottom > finger_tip:
+        return True
+    else:
+        return False
 
 cap = cv2.VideoCapture(0)
 
@@ -78,15 +83,23 @@ mpDraw = mp.solutions.drawing_utils
 pTime = 0
 cTime = 0
 
+counter = 0
+reset_interval = 50
+exit_couter=0
+
 last_move=None
 player = MusicPlayer()
 while True:
     success, img = cap.read()
     imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     results = hands.process(imgRGB)
-    
+
     gesture_detected = False  # Flag to track if any gesture is detected
-    
+    if counter >= reset_interval:
+        last_move = None  # Reset last_move
+        counter = 0  # Reset the counter
+
+    counter += 1  # Increment the counter
     if results.multi_hand_landmarks:
         for handLms in results.multi_hand_landmarks:
             for id, lm in enumerate(handLms.landmark):
@@ -94,20 +107,27 @@ while True:
                 cx, cy = int(lm.x * w), int(lm.y * h)
 
                 if id == 4:  # Thumb tip
-                    thumb_tip = (cx, cy)
+                    thumb_tip =  cy
+                if id == 0:  # Thumb tip
+                    thumb_bottom =  cy
 
                 if id == 8:  # Index tip
-                    index_tip = (cx, cy)
+                    index_tip =  cy
+                if id == 5:  # Index tip
+                    index_bottom =  cy
 
                 if id == 9:  # Środek dłoni
-                    palm_center = cy
-                # print(id, cx, cy)
+                    middle_center = cy
                 if id == 12:
                     middle_tip = cy
                 
+                if id == 13:
+                    ring_bottom = cy
                 if id == 16:
                     ring_tip = cy
 
+                if id == 17:
+                    small_bottom = cy
                 if id == 20:
                     small_tip = cy
                 cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
@@ -117,31 +137,36 @@ while True:
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
 
             gesture_detected = True
-
-            if thumb_tip[0] < palm_center and small_tip < palm_center and ring_tip < palm_center and index_tip[0] < palm_center and middle_tip < palm_center:
+            if finger_up(thumb_bottom,thumb_tip) and finger_up(small_bottom,small_tip) and finger_up(index_bottom, index_tip) and finger_up(middle_center, middle_tip):
                 cv2.putText(img, "Hello", (10, 300), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
                 if last_move != "🖐":
+                    exit_couter=0
                     print("🖐")
                     last_move="🖐"
                     player.stop()
-            elif index_tip[0] < palm_center and middle_tip >= palm_center:
+            elif finger_up(index_bottom,index_tip) and finger_up(small_bottom,small_tip):
+                cv2.putText(img, "Satan", (10, 300), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
+                if last_move != "🤘":
+                    exit_couter=0
+                    print("🤘")
+                    last_move = "🤘"
+                    player.next_track()
+            elif finger_up(index_bottom,index_tip) and not finger_up(middle_center,middle_tip) and not finger_up(ring_bottom,ring_tip) and not finger_up(small_bottom, small_tip):
                 cv2.putText(img, "Wskazujacy w gore", (10, 300), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
                 if last_move != "☝️":
+                    exit_couter=0
                     print("☝️")
                     last_move="☝️"
                     player.previous_track()
-            elif middle_tip < palm_center and index_tip[0] < palm_center:
-                cv2.putText(img, "Znak Pokoju", (10, 300), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
-                if last_move != "✌":
-                    last_move="✌️"
-                    print("✌️")
-                    player.next_track()
-            elif thumb_tip[0] < palm_center:
+            elif thumb_tip < middle_center:
                 cv2.putText(img, "Kciuk w gore", (10, 300), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
                 if last_move != "👍":
+                    exit_couter+=1
                     last_move="👍"
                     print("👍")
-                    break
+                elif exit_couter==2:
+                    exit()                    
+
     if not gesture_detected:
         cv2.putText(img, "No gesture detected", (10, 300), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 2)
 
@@ -149,7 +174,7 @@ while True:
     fps = 1 / (cTime - pTime)
     pTime = cTime
 
-    cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 3)
+    cv2.putText(img, str(int(fps)), (20, 80), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 3)
 
     cv2.imshow("Image", img)
     cv2.waitKey(1)
